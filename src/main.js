@@ -1,17 +1,28 @@
-import fs from 'fs';
 import express from "express";
-import morgan from "morgan";
-import cors from "cors"
-import { createStudent } from './student.js';
+import { engine } from 'express-handlebars';
+import path from 'path';
+
+
 const app = express()
 const port = 3000
-app.use(cors());
-app.use(express.json())
-app.use(morgan('combined'))
 
-app.post('/', (req, res) => {
- createStudent(req.body)
- return res.json(JSON.parse(fs.readFileSync("students.json")))
+//engine handelbar
+app.engine('.hbs', engine({
+  extname: '.hbs'
+}));
+app.set('view engine', '.hbs');
+app.set('views', 'src/resource/views');
+// app.set('views', path.join(__dirname,'resource/views'));
+
+//
+// app.use(cors());
+// app.use(express.json())
+// app.use(morgan('combined'))
+
+
+
+app.get('/', (req, res) => {
+  res.render('home')
 })
 
 app.listen(port, () => {
